@@ -1,0 +1,9 @@
+Commit Rule
+
+[title]	(수정사항 짧게 기입)
+- [content]	(생략 가능, 수정사항이 길어질 경우나 세부항목기입)
+
+merge 할 때
+
+merge_[title]
+- [content]	(생략 가능, 수정사항이 길어질 경우나 세부항목기입)
