@@ -64,7 +64,7 @@ public class TravelRoom {
                         me.email = User.getFirebaseUser().getEmail();
 
                         documentReference.collection("Participants")
-                                .document("UserName")
+                                .document(me.uid)
                                 .set(me.getHashMap())
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

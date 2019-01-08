@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -86,6 +87,9 @@ public class User {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "createUserWithEmail:success");
                             user = mAuth.getCurrentUser();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName("이름").build();
+                            user.updateProfile(profileUpdates);
 
                             //Authentication 회원가입 성공하면 DATABASE 생성
                             User MyInfo = new User(user.getUid(), "이름", "휴대폰번호", "이메일");
