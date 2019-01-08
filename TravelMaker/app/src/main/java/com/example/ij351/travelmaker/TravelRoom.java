@@ -17,8 +17,8 @@ import java.util.Map;
 //여행 방 관리 클래스
 //FireStore  이용
 public class TravelRoom {
-    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String RoomId;
+    public static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public static String roomId;
     private static String TAG = "LoginActivity";
 
     TravelRoom()
@@ -26,23 +26,6 @@ public class TravelRoom {
         db = FirebaseFirestore.getInstance();
     }
 
-    // 참가한 사람 불러오기
-    public static void getParticipants(String roomId)
-    {
-        db.collection("Travels").document(roomId)
-                .collection("Participants").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Log.d(TAG, documentSnapshot.getId() + "=> "+documentSnapshot.getData());
-                            }
-                        }
-                    }
-                });
-
-    }
 
     // 새로운 여행 방 생성
     public static void createNewRoom() {

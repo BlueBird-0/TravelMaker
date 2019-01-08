@@ -13,12 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 public class BFragment extends Fragment {
     private String title;
     private int page;
     RecyclerPartAdapter adapter;
+    RecyclerCheckAdapter adapter_check;
 
 
 
@@ -56,24 +62,56 @@ public class BFragment extends Fragment {
             }
         });
 
-        //리스트 출력
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("전인학");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
 
+        //방에 있는 사람들 데이터 가져오기
+        //리스트 출력
+        final ArrayList<String> animalNames = new ArrayList<>();
         // set up the RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_participant);
+        final RecyclerView recyclerView = view.findViewById(R.id.recycler_participant);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new RecyclerPartAdapter(getContext(), animalNames);
         //adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
+        //TravelRoom.db.collection("Travels").document(TravelRoom.roomId)
+        TravelRoom.db.collection("Travels").document("xBvXhUxaCAoTRIMnuWcG")
+                .collection("Participants").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                animalNames.add(documentSnapshot.getString("name"));
+                            }
+                            adapter.notifyDataSetChanged();     //Adapter 새로고침
+                        }
+                    }
+                });
 
-        //데이터 가져오기 테스트
-        TravelRoom.getParticipants("WYICGi4IhKWXU9vJF4H2");
+
+        Log.d("test001", "여기진행중");
+        //방에 CheckLists 가져오기
+        //리스트 출력
+        final ArrayList<String> titles = new ArrayList<>();
+        // set up the RecyclerView
+        final RecyclerView recyclerView_checkList = view.findViewById(R.id.recycler_checklists);
+        recyclerView_checkList.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter_check = new RecyclerCheckAdapter(getContext(), titles);
+        //adapter.setClickListener(this);
+        recyclerView_checkList.setAdapter(adapter_check);
+        TravelRoom.db.collection("CheckLists").document("xBvXhUxaCAoTRIMnuWcG")
+                .collection("CheckLists").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                titles.add(documentSnapshot.getId());
+                            }
+                            adapter_check.notifyDataSetChanged();     //Adapter 새로고침
+                        }
+                    }
+                });
 
         return view;
     }
