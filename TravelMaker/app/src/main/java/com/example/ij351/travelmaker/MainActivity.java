@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
             //메인 액티비티 만들면서 로그인 액티비티 실행
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        }else
+        {
+            User.loginUser();
         }
 
 
