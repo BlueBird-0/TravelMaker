@@ -58,6 +58,20 @@ public class TravelRoom {
                                         Log.d(TAG, "참가자 메뉴 생성");
                                     }
                                 });
+
+
+                        //Costs 생성
+                        Map<String, Object> costData = new HashMap<>();
+                        costData.put("정보", "me");
+                        documentReference.collection("Costs")
+                                .document("UserName")
+                                .set(data)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "참가자 메뉴 생성");
+                                    }
+                                });
                     }
                 });
     }

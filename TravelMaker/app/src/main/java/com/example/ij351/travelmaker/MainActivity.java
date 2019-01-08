@@ -20,9 +20,14 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(fragmentPagerAdapter);
 
 
-        //메인 액티비티 만들면서 로그인 액티비티 실행
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+
+        //로그인 체크
+        if(User.checkLogined() == false)
+        {
+            //메인 액티비티 만들면서 로그인 액티비티 실행
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
 
     }
