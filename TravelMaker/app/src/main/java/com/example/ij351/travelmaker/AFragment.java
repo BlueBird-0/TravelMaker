@@ -26,7 +26,6 @@ public class AFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_a, container, false);
-        Log.d("test001", String.valueOf(page));
         return view;
     }
 }

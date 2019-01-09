@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -25,7 +27,6 @@ public class BFragment extends Fragment {
     private int page;
     RecyclerPartAdapter adapter;
     RecyclerCheckAdapter adapter_check;
-
 
 
     public static BFragment newInstance(int page, String title) {
@@ -62,14 +63,23 @@ public class BFragment extends Fragment {
             }
         });
 
+        Button write = (Button)view.findViewById(R.id.button5);
+        write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TravelRoom.writeContent("UserName", "첫번째 글");
+            }
+        });
+
+
 
         //방에 있는 사람들 데이터 가져오기
         //리스트 출력
-        final ArrayList<String> animalNames = new ArrayList<>();
+        final ArrayList<String> Participants = new ArrayList<>();
         // set up the RecyclerView
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_participant);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        adapter = new RecyclerPartAdapter(getContext(), animalNames);
+        adapter = new RecyclerPartAdapter(getContext(), Participants);
         //adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
@@ -81,7 +91,7 @@ public class BFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                animalNames.add(documentSnapshot.getString("name"));
+                                Participants.add(documentSnapshot.getString("name"));
                             }
                             adapter.notifyDataSetChanged();     //Adapter 새로고침
                         }
@@ -89,8 +99,7 @@ public class BFragment extends Fragment {
                 });
 
 
-        Log.d("test001", "여기진행중");
-        //방에 CheckLists 가져오기
+        //방의 CheckLists 가져오기
         //리스트 출력
         final ArrayList<String> titles = new ArrayList<>();
         // set up the RecyclerView
@@ -99,7 +108,7 @@ public class BFragment extends Fragment {
         adapter_check = new RecyclerCheckAdapter(getContext(), titles);
         //adapter.setClickListener(this);
         recyclerView_checkList.setAdapter(adapter_check);
-        TravelRoom.db.collection("CheckLists").document("xBvXhUxaCAoTRIMnuWcG")
+        TravelRoom.db.collection("Travels").document("xBvXhUxaCAoTRIMnuWcG")
                 .collection("CheckLists").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

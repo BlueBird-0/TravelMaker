@@ -2,12 +2,19 @@ package com.example.ij351.travelmaker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdapter.ViewHolder> {
@@ -33,6 +40,31 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         String animal = mData.get(position);
         holder.myTextView.setText(animal);
+
+        //contents 가져오기
+        final RecyclerCheckContentAdapter adapter_content;
+        final ArrayList<Content> contents = new ArrayList<>();       //2차원 배열
+        // set up the RecyclerView
+        holder.recyclerView_content.setLayoutManager(new LinearLayoutManager(mInflater.getContext()));
+        adapter_content = new RecyclerCheckContentAdapter(mInflater.getContext(), contents);
+        //adapter.setClickListener(this);
+        holder.recyclerView_content.setAdapter(adapter_content);
+        TravelRoom.db.collection("Travels").document("xBvXhUxaCAoTRIMnuWcG")
+                .collection("CheckLists").document(animal).collection("contents").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot documentSnapshot: queryDocumentSnapshots.getDocuments())
+                        {
+                            Content content = new Content(documentSnapshot.getId(),
+                                    documentSnapshot.getString("comment"),
+                                    documentSnapshot.getTimestamp("time"),
+                                    documentSnapshot.getString("writer"));
+                            contents.add(content);
+                        }
+                        adapter_content.notifyDataSetChanged();
+                    }
+                });
     }
 
     // total number of rows
@@ -45,10 +77,12 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
+        RecyclerView recyclerView_content;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.textView_checkList_title);
+            recyclerView_content = itemView.findViewById(R.id.recycler_checklist_content);
             itemView.setOnClickListener(this);
         }
 

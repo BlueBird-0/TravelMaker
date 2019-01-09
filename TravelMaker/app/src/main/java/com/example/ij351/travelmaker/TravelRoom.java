@@ -86,5 +86,20 @@ public class TravelRoom {
                 });
     }
 
+    // 글 작성
+    public static void writeContent(String title, String comment) {
+        Content data = new Content(comment);
+
+        roomId = "xBvXhUxaCAoTRIMnuWcG";
+
+        db.collection("Travels").document(roomId).collection("CheckLists").document(title).collection("contents")
+                .add(data.getHashMap())
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "글쓰기 성공");
+                    }
+                });
+    }
 }
 

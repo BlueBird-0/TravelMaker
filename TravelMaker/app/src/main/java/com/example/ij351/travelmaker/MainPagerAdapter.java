@@ -34,6 +34,15 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
+        switch(position)
+        {
+            case 0:
+                return "계획";
+            case 1:
+                return "준비물";
+            case 2:
+                return "비용";
+        }
         return "Page "+position;
     }
 }

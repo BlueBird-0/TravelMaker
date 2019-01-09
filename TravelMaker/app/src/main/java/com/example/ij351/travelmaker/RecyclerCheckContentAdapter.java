@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapter.ViewHolder> {
-    private List<String> mData;
+public class RecyclerCheckContentAdapter extends RecyclerView.Adapter<RecyclerCheckContentAdapter.ViewHolder> {
+    private List<Content> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecyclerPartAdapter(Context context, List<String> data) {
+    RecyclerCheckContentAdapter(Context context, List<Content> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -24,15 +24,18 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_participants, parent, false);
+        View view = mInflater.inflate(R.layout.item_checklist_content, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.contentComment.setText(animal);
+        String comment_str = mData.get(position).comment;
+        holder.comment.setText(comment_str);
+
+        //String writer_str = mData.get(position).writer;
+        holder.writer.setText("");
     }
 
     // total number of rows
@@ -44,11 +47,13 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView contentComment;
+        TextView comment;
+        TextView writer;
 
         ViewHolder(View itemView) {
             super(itemView);
-            contentComment = itemView.findViewById(R.id.textView_contentComment);
+            comment = itemView.findViewById(R.id.content);
+            writer = itemView.findViewById(R.id.writer);
             itemView.setOnClickListener(this);
         }
 
@@ -59,7 +64,7 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    Content getItem(int id) {
         return mData.get(id);
     }
 
