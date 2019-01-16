@@ -2,12 +2,14 @@ package com.example.ij351.travelmaker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,9 +39,22 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        String title = mData.get(position);
+        holder.myTextView.setText(title);
+        //글쓰기 버튼 누를 때 동작
+        holder.write_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConstraintLayout keyboard = (ConstraintLayout)holder.itemView.getRootView().findViewById(R.id.layout_keyboard);
+                keyboard.setVisibility(View.VISIBLE);
+                //String titleStr = ;
+                //String
+                //TravelRoom.writeContent();
+            }
+        });
+
+
 
         //contents 가져오기
         final RecyclerCheckContentAdapter adapter_content;
@@ -49,8 +64,8 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
         adapter_content = new RecyclerCheckContentAdapter(mInflater.getContext(), contents);
         //adapter.setClickListener(this);
         holder.recyclerView_content.setAdapter(adapter_content);
-        TravelRoom.db.collection("Travels").document("xBvXhUxaCAoTRIMnuWcG")
-                .collection("CheckLists").document(animal).collection("contents").get()
+        TravelRoom.db.collection("Travels").document(TravelRoom.roomId)
+                .collection("CheckLists").document(title).collection("contents").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -77,12 +92,16 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
+        Button write_btn;
         RecyclerView recyclerView_content;
+        ConstraintLayout keyboard;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.textView_checkList_title);
             recyclerView_content = itemView.findViewById(R.id.recycler_checklist_content);
+            write_btn = itemView.findViewById(R.id.button_content_write);
+
             itemView.setOnClickListener(this);
         }
 

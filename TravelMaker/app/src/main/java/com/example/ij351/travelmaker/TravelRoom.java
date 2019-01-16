@@ -18,7 +18,7 @@ import java.util.Map;
 //FireStore  이용
 public class TravelRoom {
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public static String roomId;
+    public static String roomId = "xBvXhUxaCAoTRIMnuWcG";
     private static String TAG = "LoginActivity";
 
     TravelRoom()
@@ -89,9 +89,6 @@ public class TravelRoom {
     // 글 작성
     public static void writeContent(String title, String comment) {
         Content data = new Content(comment);
-
-        roomId = "xBvXhUxaCAoTRIMnuWcG";
-
         db.collection("Travels").document(roomId).collection("CheckLists").document(title).collection("contents")
                 .add(data.getHashMap())
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

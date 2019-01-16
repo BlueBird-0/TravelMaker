@@ -1,11 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="actionBarSize">32dp</item>
     </style>
+
+
+    <!-- Tabbar layout theme. -->
+    <style name="TabbarTheme" parent="Widget.Design.TabLayout">
+        <!-- Customize your theme here. -->
+        <item name="tabIndicatorColor">#FFFF</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextColor">#1f2124</item>
+        <item name="tabSelectedTextColor">#FFFFFF</item>
+    </style>
+
+
 
 </resources>
