@@ -24,8 +24,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class BFragment extends Fragment {
-    private String title;
-    private int page;
     RecyclerPartAdapter adapter;
     RecyclerCheckAdapter adapter_check;
 
@@ -47,7 +45,6 @@ public class BFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test001", String.valueOf(page)+": 버튼 눌림");
                 TravelRoom.createNewRoom();
             }
         });
@@ -57,7 +54,6 @@ public class BFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test001", String.valueOf(page)+": 버튼 눌림 =>로그아웃");
                 User.logoutUser();
             }
         });

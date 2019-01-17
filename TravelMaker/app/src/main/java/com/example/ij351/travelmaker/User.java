@@ -59,6 +59,7 @@ public class User {
     //로그아웃
     public static void logoutUser() {
         mAuth.signOut();
+        user = null;
     }
 
     //로그인

@@ -15,23 +15,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:background="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView">
+
+            </FrameLayout>
+
             <ProgressBar
                 android:id="@+id/progressBar_main"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/recycler_participant"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.487"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
                 android:text="여권 &amp; 비자"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
@@ -44,9 +56,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="10dp"
                 android:scrollbars="vertical"
+                android:minHeight="76dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -64,6 +77,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:minHeight="76dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
@@ -78,10 +92,10 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/recycler_checklists"
+            android:layout_marginTop="58dp"
             app:layout_constraintEnd_toEndOf="@+id/recycler_checklists"
             app:layout_constraintStart_toStartOf="@+id/recycler_checklists"
-            app:layout_constraintTop_toTopOf="@+id/recycler_checklists" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <Button
             android:id="@+id/button6"

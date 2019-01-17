@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class AFragment extends Fragment {
-    private String title;
-    private int page;
 
     public static AFragment newInstance(int page, String title) {
         AFragment aFragment = new AFragment();

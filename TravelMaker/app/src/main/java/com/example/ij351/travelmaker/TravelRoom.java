@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -95,6 +96,19 @@ public class TravelRoom {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "글쓰기 성공");
+                    }
+                });
+    }
+
+    //글작성
+    public static void writeCost(String content, Double cost) {
+        Cost data = new Cost(cost, Timestamp.now(), content);
+        db.collection("Travels").document(roomId).collection("Costs")
+                .add(data.getHashMap())
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "글쓰기 성공2");
                     }
                 });
     }

@@ -2,6 +2,7 @@ package com.example.ij351.travelmaker;
 
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         //setupTabIcons();
 
+
+        User.logoutUser();
         //로그인 체크
         if(User.checkLogined() == false)
         {
@@ -67,11 +71,22 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onVisibilityChanged(boolean isOpen) {
-                        Log.d("test001", String.valueOf(isOpen));
+                        ViewPager mainViewPager = (ViewPager)findViewById(R.id.mainViewPager);
+                        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mainViewPager.getLayoutParams();
+                        params.bottomToTop = R.id.layout_keyboard;
+                        mainViewPager.setLayoutParams(params);
+
                         if(isOpen == false)
                         {
                             ConstraintLayout keyboardLayout = (ConstraintLayout)findViewById(R.id.layout_keyboard);
                             keyboardLayout.setVisibility(View.INVISIBLE);
+
+                            ConstraintLayout keyboardLayout2 = (ConstraintLayout)findViewById(R.id.layout_keyboard2);
+                            keyboardLayout2.setVisibility(View.INVISIBLE);
+
+
+                            params.bottomToTop = ConstraintLayout.LayoutParams.MATCH_PARENT;
+                            mainViewPager.setLayoutParams(params);
                         }
                     }
                 }
@@ -96,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.toolbar_option)
         {
-            Intent intent = new Intent(this, WriteActivity.class);
+            Intent intent = new Intent(this, OptionActivity.class);
             startActivity(intent);
             Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
             return true;
