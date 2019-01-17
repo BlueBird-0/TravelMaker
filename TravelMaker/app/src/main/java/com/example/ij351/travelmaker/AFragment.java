@@ -19,7 +19,6 @@ public class AFragment extends Fragment {
         aFragment.setArguments(args);
         return aFragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

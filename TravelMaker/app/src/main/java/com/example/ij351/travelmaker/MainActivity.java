@@ -1,5 +1,6 @@
 package com.example.ij351.travelmaker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -38,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
         setSupportActionBar(toolbar);
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         //로그인 체크
         if(User.checkLogined() == false)
         {
-            //메인 액티비티 만들면서 로그인 액티비티 실행
+            //로그인 액티비티 실행
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }else
@@ -73,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onVisibilityChanged(boolean isOpen) {
                         ViewPager mainViewPager = (ViewPager)findViewById(R.id.mainViewPager);
                         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mainViewPager.getLayoutParams();
-                        params.bottomToTop = R.id.layout_keyboard;
-                        mainViewPager.setLayoutParams(params);
+                        if(isOpen == true) {
+                            params.bottomToTop = R.id.layout_keyboard;
+                            mainViewPager.setLayoutParams(params);
+                        }
 
                         if(isOpen == false)
                         {
@@ -97,6 +100,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         fragmentPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                Log.d("test001", "PageSelected : "+ String.valueOf(i));
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
+
+
         viewPager.setAdapter(fragmentPagerAdapter);
     }
 

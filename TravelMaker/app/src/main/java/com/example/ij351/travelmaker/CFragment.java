@@ -44,8 +44,10 @@ public class CFragment extends Fragment {
         args.putInt("someInt", page);
         args.putString("someTitle", title);
         cFragment.setArguments(args);
+
         return cFragment;
     }
+
 
     @Nullable
     @Override
@@ -53,6 +55,7 @@ public class CFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_c, container, false);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Travels").document(TravelRoom.roomId).collection("Costs")
+                .orderBy("time")    //내림차순검색
                 .addSnapshotListener(new EventListener<QuerySnapshot>(){
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot value, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -109,16 +112,19 @@ public class CFragment extends Fragment {
             public void onClick(View v) {
                 ConstraintLayout keyboard2 = (ConstraintLayout)view.getRootView().findViewById(R.id.layout_keyboard2);
                 keyboard2.setVisibility(View.VISIBLE);
-                final EditText content = (EditText)view.getRootView().findViewById(R.id.edit_keyboard2);
-                final EditText cost = (EditText)view.getRootView().findViewById(R.id.edit_keyboard3);
+
+                EditText content = (EditText)view.getRootView().findViewById(R.id.edit_keyboard2);
+                content.requestFocus();
                 Button send = (Button)view.getRootView().findViewById(R.id.button_key2_send);
 
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(content, InputMethodManager.SHOW_IMPLICIT);
+                final InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(content, InputMethodManager.SHOW_FORCED);
                 //글쓰기 누를 때,
                 send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        EditText content = (EditText)view.getRootView().findViewById(R.id.edit_keyboard2);
+                        EditText cost = (EditText)view.getRootView().findViewById(R.id.edit_keyboard3);
                         if(cost.getText().toString().trim().length() == 0) {
                             cost.requestFocus();
                             return;
@@ -128,6 +134,9 @@ public class CFragment extends Fragment {
                             return;
                         }
                         TravelRoom.writeCost(content.getText().toString(), Double.valueOf(cost.getText().toString()));
+                        content.setText("");
+                        cost.setText("");
+                        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0); //키보드 접기
                     }
                 });
             }
@@ -144,6 +153,7 @@ public class CFragment extends Fragment {
         recyclerView2.setAdapter(cost_adapter);
 
         TravelRoom.db.collection("Travels").document(TravelRoom.roomId).collection("Costs")
+                .orderBy("time")    //내림차순검색
                 .addSnapshotListener(new EventListener<QuerySnapshot>(){
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot value, @javax.annotation.Nullable FirebaseFirestoreException e) {

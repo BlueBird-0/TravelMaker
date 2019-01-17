@@ -35,7 +35,6 @@ public class BFragment extends Fragment {
         bFragment.setArguments(args);
         return bFragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
