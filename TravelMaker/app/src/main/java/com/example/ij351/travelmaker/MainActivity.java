@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -50,21 +51,17 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
         //setupTabIcons();
 
 
-        User.logoutUser();
         //로그인 체크
         if(User.checkLogined() == false)
         {
             //로그인 액티비티 실행
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-        }else
-        {
-            User.loginUser();
         }
+
 
         //키보드 이벤트 리스너
         KeyboardVisibilityEvent.setEventListener(
@@ -94,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
-
     }
 
     private void setupViewPager(ViewPager viewPager) {

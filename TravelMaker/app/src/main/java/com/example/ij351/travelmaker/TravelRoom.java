@@ -31,7 +31,7 @@ public class TravelRoom {
     // 새로운 여행 방 생성
     public static void createNewRoom() {
         Map<String, Object> data = new HashMap<>();
-        data.put("part", "me");
+        data.put("make", Timestamp.now());
 
         db.collection("Travels")
                 .add(data)
@@ -39,7 +39,6 @@ public class TravelRoom {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "방만들기 성공");
-
 
                         //Participants 생성
                         User me = new User();

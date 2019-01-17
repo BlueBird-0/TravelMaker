@@ -1,9 +1,13 @@
 package com.example.ij351.travelmaker;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidadvance.topsnackbar.TSnackbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -63,8 +67,9 @@ public class User {
     }
 
     //로그인
-    public static void loginUser() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
+    public static void loginUser(String email, String password, OnCompleteListener<AuthResult> listener) {
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(listener);
     }
 
     //로그인 상태 체크
@@ -80,30 +85,23 @@ public class User {
 
 
     //회원가입
-    public static void createUser(String email, String password) {
+    public static void createUser(final String email, final String name, String password, OnCompleteListener<AuthResult> listener) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            user = mAuth.getCurrentUser();
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName("이름").build();
-                            user.updateProfile(profileUpdates);
-
-                            //Authentication 회원가입 성공하면 DATABASE 생성
-                            User MyInfo = new User(user.getUid(), "이름", "휴대폰번호", "이메일");
-                            db.collection("Users")
-                                    .document(user.getUid())
-                                    .set(MyInfo.getHashMap());
-                        } else {
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            //Toast.makeText(LoginActivity.this, "Authentication failed.",
-                            //      Toast.LENGTH_SHORT).show();
-                        }
+                    public void onSuccess(AuthResult authResult) {
+                        user = mAuth.getCurrentUser();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name).build();
+                        user.updateProfile(profileUpdates);
+                        //Authentication 회원가입 성공하면 DATABASE 생성
+                        User MyInfo = new User(user.getUid(), name, "휴대폰번호", email);
+                        db.collection("Users")
+                                .document(user.getUid())
+                                .set(MyInfo.getHashMap());
                     }
-                });
+                })
+                .addOnCompleteListener(listener);
     }
 
     public static FirebaseUser getFirebaseUser()
