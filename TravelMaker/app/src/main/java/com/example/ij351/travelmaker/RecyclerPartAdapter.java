@@ -6,17 +6,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
 
 public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapter.ViewHolder> {
-    private List<String> mData;
+    private List<User> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecyclerPartAdapter(Context context, List<String> data) {
+    RecyclerPartAdapter(Context context, List<User> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -31,8 +32,18 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.contentComment.setText(animal);
+        User user = mData.get(position);
+        holder.contentComment.setText(user.name);
+        if(user.hasPassport == false)
+        {
+            holder.contentState.setBackgroundResource(R.drawable.ic_passport);
+        }else if(user.hasVISA == false)
+        {
+            holder.contentState.setBackgroundResource(R.drawable.ic_visa);
+        }else
+        {
+            holder.contentState.setBackgroundResource(R.drawable.ic_ok);
+        }
     }
 
     // total number of rows
@@ -45,10 +56,12 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView contentComment;
+        Button contentState;
 
         ViewHolder(View itemView) {
             super(itemView);
             contentComment = itemView.findViewById(R.id.textView_contentComment);
+            contentState = itemView.findViewById(R.id.button_contentState);
             itemView.setOnClickListener(this);
         }
 
@@ -59,7 +72,7 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    User getItem(int id) {
         return mData.get(id);
     }
 

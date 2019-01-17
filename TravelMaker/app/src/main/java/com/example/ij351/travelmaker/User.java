@@ -39,6 +39,15 @@ public class User {
         this.hasVISA = false;
         this.hasPassport = false;
     }
+    public User(String uid, String name, boolean hasPassport, boolean hasVISA, String email)
+    {
+        this.uid = uid;
+        this.name = name;
+        this.hasPassport = hasPassport;
+        this.hasVISA = hasVISA;
+        this.email = email;
+    }
+
     public User(String uid, String name, String phoneNumber, String email) {
         this.uid = uid;
         this.name = name;

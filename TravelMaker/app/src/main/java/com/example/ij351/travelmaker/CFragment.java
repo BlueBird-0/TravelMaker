@@ -142,6 +142,8 @@ public class CFragment extends Fragment {
             }
         });
 
+
+
         //사용내역 가져오기
         //리스트 출력
         final ArrayList<Cost> costs = new ArrayList<>();

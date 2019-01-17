@@ -21,6 +21,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".CreateActivity"/>
         <activity android:name=".OptionActivity"/>
+        <activity android:name=".NewContentActivity" android:theme="@style/AppTheme.Dialog"/>
     </application>
 
 </manifest>

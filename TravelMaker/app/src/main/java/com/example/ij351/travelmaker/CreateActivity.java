@@ -24,9 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CreateActivity extends AppCompatActivity {
-    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private static FirebaseUser user = mAuth.getCurrentUser();
     private String TAG = "LoginActivityLog";
 
     @Override

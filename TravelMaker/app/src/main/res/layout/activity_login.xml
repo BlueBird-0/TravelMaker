@@ -8,7 +8,8 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
-        android:layout_height="653dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
         tools:layout_editor_absoluteX="16dp">
 

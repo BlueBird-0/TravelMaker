@@ -9,11 +9,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -23,6 +29,8 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
     private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private String TAG = "RecyclerCheckAdapter";
+
 
     // data is passed into the constructor
     RecyclerCheckAdapter(Context context, List<String> data) {
@@ -40,7 +48,7 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String title = mData.get(position);
+        final String title = mData.get(position);
         holder.myTextView.setText(title);
         //글쓰기 버튼 누를 때 동작
         holder.write_btn.setOnClickListener(new View.OnClickListener() {
@@ -48,9 +56,27 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
             public void onClick(View v) {
                 ConstraintLayout keyboard = (ConstraintLayout)holder.itemView.getRootView().findViewById(R.id.layout_keyboard);
                 keyboard.setVisibility(View.VISIBLE);
-                //String titleStr = ;
-                //String
-                //TravelRoom.writeContent();
+
+                EditText content = (EditText)holder.itemView.getRootView().findViewById(R.id.edit_keyboard);
+                content.requestFocus();
+                Button send = (Button)holder.itemView.getRootView().findViewById(R.id.button_key_send);
+
+                final InputMethodManager imm = (InputMethodManager)mInflater.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(content, InputMethodManager.SHOW_FORCED);
+                //글쓰기 누를 때
+                send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditText content = (EditText)holder.itemView.getRootView().findViewById(R.id.edit_keyboard);
+                        if(content.getText().toString().trim().length() == 0) {
+                            content.requestFocus();
+                            return;
+                        }
+                        TravelRoom.writeContent(title, content.getText().toString());
+                        content.setText("");
+                        imm.hideSoftInputFromWindow(holder.itemView.getWindowToken(), 0); //키보드 접기
+                    }
+                });
             }
         });
 
@@ -65,19 +91,28 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
         //adapter.setClickListener(this);
         holder.recyclerView_content.setAdapter(adapter_content);
         TravelRoom.db.collection("Travels").document(TravelRoom.roomId)
-                .collection("CheckLists").document(title).collection("contents").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .collection("CheckLists").document(title).collection("contents")
+                .orderBy("time")
+                .addSnapshotListener(new EventListener<QuerySnapshot>(){
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(DocumentSnapshot documentSnapshot: queryDocumentSnapshots.getDocuments())
-                        {
-                            Content content = new Content(documentSnapshot.getId(),
-                                    documentSnapshot.getString("comment"),
-                                    documentSnapshot.getTimestamp("time"),
-                                    documentSnapshot.getString("writer"));
-                            contents.add(content);
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot value, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
                         }
-                        adapter_content.notifyDataSetChanged();
+
+                        contents.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc.getString("comment") != null || doc.getTimestamp("time") != null || doc.getString("writer") != null) {
+                                String comment = doc.getString("comment");
+                                Timestamp time = doc.getTimestamp("time");
+                                String writer = doc.getString("writer");
+
+                                Content newContent = new Content(doc.getId(), comment, time, writer);
+                                contents.add(newContent);
+                            }
+                        }
+                        adapter_content.notifyDataSetChanged();     //Adapter 새로고침
                     }
                 });
     }
@@ -101,7 +136,6 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
             myTextView = itemView.findViewById(R.id.textView_checkList_title);
             recyclerView_content = itemView.findViewById(R.id.recycler_checklist_content);
             write_btn = itemView.findViewById(R.id.button_content_write);
-
             itemView.setOnClickListener(this);
         }
 

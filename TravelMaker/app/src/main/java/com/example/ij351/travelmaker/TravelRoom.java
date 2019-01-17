@@ -19,7 +19,7 @@ import java.util.Map;
 //FireStore  이용
 public class TravelRoom {
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public static String roomId = "xBvXhUxaCAoTRIMnuWcG";
+    public static String roomId = "uhZTAheSeMEi0A7M5nry";
     private static String TAG = "LoginActivity";
 
     TravelRoom()
@@ -29,12 +29,13 @@ public class TravelRoom {
 
 
     // 새로운 여행 방 생성
-    public static void createNewRoom() {
+    public static void createNewRoom(OnCompleteListener<DocumentReference> listener) {
         Map<String, Object> data = new HashMap<>();
         data.put("make", Timestamp.now());
 
         db.collection("Travels")
                 .add(data)
+                .addOnCompleteListener(listener)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -48,68 +49,46 @@ public class TravelRoom {
 
                         documentReference.collection("Participants")
                                 .document(me.uid)
-                                .set(me.getHashMap())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "참가자 메뉴 생성");
-                                    }
-                                });
+                                .set(me.getHashMap());
 
                         //CheckLists 생성
                         Map<String, Object> checkData = new HashMap<>();
                         checkData.put("정보", "me");
                         documentReference.collection("CheckLists")
                                 .document("UserName")
-                                .set(checkData)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "참가자 메뉴 생성");
-                                    }
-                                });
-
-
-                        //Costs 생성
-                        Map<String, Object> costData = new HashMap<>();
-                        costData.put("정보", "me");
-                        documentReference.collection("Costs")
-                                .document("UserName")
-                                .set(costData)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "참가자 메뉴 생성");
-                                    }
-                                });
+                                .set(checkData);
                     }
                 });
+    }
+
+    // 방 입장
+    public static void entryRoom(String id)
+    {
+        roomId = id;
+        Log.d(TAG,"방 입장 : "+roomId);
+    }
+
+    public static void createCheckList(String title)
+    {
+        Map<String, Object> data = new HashMap<>();
+        data.put("make", Timestamp.now());
+        data.put("writer", User.getFirebaseUser().getDisplayName());
+        db.collection("Travels").document(roomId).collection("CheckLists").document(title)
+                .set(data);
     }
 
     // 글 작성
     public static void writeContent(String title, String comment) {
         Content data = new Content(comment);
         db.collection("Travels").document(roomId).collection("CheckLists").document(title).collection("contents")
-                .add(data.getHashMap())
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "글쓰기 성공");
-                    }
-                });
+                .add(data.getHashMap());
     }
 
     //글작성
     public static void writeCost(String content, Double cost) {
         Cost data = new Cost(cost, Timestamp.now(), content);
         db.collection("Travels").document(roomId).collection("Costs")
-                .add(data.getHashMap())
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "글쓰기 성공2");
-                    }
-                });
+                .add(data.getHashMap());
     }
 }
 

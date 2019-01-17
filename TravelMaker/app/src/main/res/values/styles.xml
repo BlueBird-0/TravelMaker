@@ -10,7 +10,6 @@
         <item name="actionBarSize">32dp</item>
     </style>
 
-
     <!-- Tabbar layout theme. -->
     <style name="TabbarTheme" parent="Widget.Design.TabLayout">
         <!-- Customize your theme here. -->
@@ -22,5 +21,9 @@
     </style>
 
 
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
 
 </resources>
