@@ -45,8 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);    //액티비티에 사용되는 xml 불러오기
 
-
-
         //xml에서 버튼 찾아오기
         final Button btn_login = (Button)findViewById(R.id.btn_login);
         final Button btn_create = (Button)findViewById(R.id.btn_createUser);
@@ -119,7 +117,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         if(User.checkLogined() == true)
         {
-            finish();
+            Intent intent = new Intent(this, RoomActivity.class);
+            startActivity(intent);
+            //finish();
         }
     }
 

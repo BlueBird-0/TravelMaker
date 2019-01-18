@@ -1,13 +1,17 @@
 package com.example.ij351.travelmaker;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,16 +56,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout)findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         //setupTabIcons();
-
-
-        //로그인 체크
-        if(User.checkLogined() == false)
-        {
-            //로그인 액티비티 실행
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
-
 
         //키보드 이벤트 리스너
         KeyboardVisibilityEvent.setEventListener(

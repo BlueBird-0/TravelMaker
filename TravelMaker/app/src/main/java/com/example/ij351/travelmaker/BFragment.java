@@ -42,16 +42,16 @@ public class BFragment extends Fragment {
         bFragment.setArguments(args);
         return bFragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_b, container, false);
-
         Button newContent= (Button)view.findViewById(R.id.button_newContent);
         newContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //로그인 액티비티 실행
+                //콘텐트쓰기 액티비티 실행
                 Intent intent = new Intent(getContext(), NewContentActivity.class);
                 startActivity(intent);
             }

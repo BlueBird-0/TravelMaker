@@ -1,13 +1,16 @@
 package com.example.ij351.travelmaker;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,7 +22,7 @@ import java.util.Map;
 //FireStore  이용
 public class TravelRoom {
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public static String roomId = "uhZTAheSeMEi0A7M5nry";
+    public static String roomId;
     private static String TAG = "LoginActivity";
 
     TravelRoom()
@@ -50,22 +53,36 @@ public class TravelRoom {
                         documentReference.collection("Participants")
                                 .document(me.uid)
                                 .set(me.getHashMap());
-
-                        //CheckLists 생성
-                        Map<String, Object> checkData = new HashMap<>();
-                        checkData.put("정보", "me");
-                        documentReference.collection("CheckLists")
-                                .document("UserName")
-                                .set(checkData);
                     }
                 });
     }
 
     // 방 입장
-    public static void entryRoom(String id)
+    public static void entryRoom(final String id, OnCompleteListener<DocumentSnapshot> listener)
     {
-        roomId = id;
-        Log.d(TAG,"방 입장 : "+roomId);
+        db.collection("Travels").document(id)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.getData() != null) {
+                            roomId = id;
+                            Log.d(TAG, "방 입장 : " + roomId);
+                        }
+                        else{
+                        }
+                    }
+                })
+                .addOnCompleteListener(listener);
+    }
+    // 방 확인
+    public static boolean hasRoom()
+    {
+        if(TravelRoom.roomId == null || TravelRoom.roomId.trim().length() == 0 || TravelRoom.roomId.equals(""))
+        {
+            return false;
+        }
+        return true;
     }
 
     public static void createCheckList(String title)

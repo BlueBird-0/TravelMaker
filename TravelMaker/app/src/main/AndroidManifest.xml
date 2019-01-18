@@ -11,14 +11,15 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize" >
+        </activity>
+
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".RoomActivity"/>
         <activity android:name=".CreateActivity"/>
         <activity android:name=".OptionActivity"/>
         <activity android:name=".NewContentActivity" android:theme="@style/AppTheme.Dialog"/>
