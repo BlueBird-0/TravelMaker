@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -172,10 +173,19 @@ public class CFragment extends Fragment {
                                 Timestamp time = doc.getTimestamp("time");
                                 Double cost = doc.getDouble("cost");
 
-                                Cost newCost = new Cost(cost, time, content);
+                                Cost newCost = new Cost(doc.getId(), cost, time, content);
                                 costs.add(newCost);
                             }
                         }
+                        //금액 계산
+                        TextView total_text = (TextView)view.findViewById(R.id.textView_total);
+                        double total = 0;
+                        for(Cost cost :costs)
+                        {
+                            total += cost.cost;
+                        }
+                        total_text.setText("Total : "+String.valueOf(total)+"￦");
+                        //개인당 금액
                         cost_adapter.notifyDataSetChanged();     //Adapter 새로고침
                         progressBar2.setVisibility(View.INVISIBLE);
                         Log.d(TAG, "Current cites in CA: " + costs);

@@ -1,11 +1,15 @@
 package com.example.ij351.travelmaker;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -30,10 +34,24 @@ public class RecyclerCheckContentAdapter extends RecyclerView.Adapter<RecyclerCh
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         String comment_str = mData.get(position).comment;
         holder.comment.setText(comment_str);
 
+        holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //롱클릭 액티비티 실행
+                Intent intent = new Intent(mInflater.getContext(), LongClickActivity.class);
+                Bundle extras = new Bundle();
+                extras.putInt("state", LongClickActivity.STATE_DEL_CHECKLIST);
+                extras.putString("title", mData.get(position).title);
+                extras.putString("documentId", mData.get(position).uid);
+                intent.putExtras( extras );
+                mInflater.getContext().startActivity(intent);
+                return false;
+            }
+        });
         //String writer_str = mData.get(position).writer;
         holder.writer.setText("");
     }
@@ -49,11 +67,13 @@ public class RecyclerCheckContentAdapter extends RecyclerView.Adapter<RecyclerCh
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView comment;
         TextView writer;
+        ConstraintLayout mainLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
             comment = itemView.findViewById(R.id.content);
             writer = itemView.findViewById(R.id.writer);
+            mainLayout = itemView.findViewById(R.id.mainLayout);
             itemView.setOnClickListener(this);
         }
 

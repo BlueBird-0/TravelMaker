@@ -6,12 +6,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Cost {
+    public String documentId;
     public double cost;
     public Timestamp timestamp;
     public String content;
 
     public Cost(double cost, Timestamp timestamp, String content)
     {
+        this.cost = cost;
+        this.timestamp = timestamp;
+        this.content = content;
+    }
+
+    public Cost(String documentId, double cost, Timestamp timestamp, String content)
+    {
+        this.documentId = documentId;
         this.cost = cost;
         this.timestamp = timestamp;
         this.content = content;

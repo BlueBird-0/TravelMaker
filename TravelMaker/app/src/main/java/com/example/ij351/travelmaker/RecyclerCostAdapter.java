@@ -1,6 +1,8 @@
 package com.example.ij351.travelmaker;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +40,7 @@ public class RecyclerCostAdapter extends RecyclerView.Adapter<RecyclerCostAdapte
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Cost cost= mData.get(position);
         SimpleDateFormat datef= new SimpleDateFormat("MM.dd");
         String time_str = datef.format(cost.timestamp.toDate());
@@ -46,7 +48,19 @@ public class RecyclerCostAdapter extends RecyclerView.Adapter<RecyclerCostAdapte
         holder.content.setText(cost.content);
         holder.time.setText(time_str);
         holder.cost.setText(String.valueOf(cost.cost)+"￦");
-        //글쓰기 버튼 누를 때 동작
+        holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //롱클릭 액티비티 실행
+                Intent intent = new Intent(mInflater.getContext(), LongClickActivity.class);
+                Bundle extras = new Bundle();
+                extras.putInt("state", LongClickActivity.STATE_DEL_COST);
+                extras.putString("documentId", mData.get(position).documentId);
+                intent.putExtras( extras );
+                mInflater.getContext().startActivity(intent);
+                return false;
+            }
+        });
     }
 
     // total number of rows
@@ -61,12 +75,14 @@ public class RecyclerCostAdapter extends RecyclerView.Adapter<RecyclerCostAdapte
         TextView time;
         TextView content;
         TextView cost;
+        ConstraintLayout mainLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
             time = itemView.findViewById(R.id.cost_time);
             content = itemView.findViewById(R.id.cost_content);
             cost = itemView.findViewById(R.id.cost_cost);
+            mainLayout = itemView.findViewById(R.id.mainLayout);
 
             itemView.setOnClickListener(this);
         }

@@ -1,6 +1,9 @@
 package com.example.ij351.travelmaker;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,34 +50,51 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final String title = mData.get(position);
         holder.myTextView.setText(title);
-        //글쓰기 버튼 누를 때 동작
+        holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //롱클릭 액티비티 실행
+                Intent intent = new Intent(mInflater.getContext(), LongClickActivity.class);
+                Bundle extras = new Bundle();
+                extras.putInt("state", LongClickActivity.STATE_DEL_CONTENT);
+                extras.putString("title", mData.get(position));
+                intent.putExtras( extras );
+                mInflater.getContext().startActivity(intent);
+                return false;
+            }
+        });
+
+
+
+                                                     //글쓰기 버튼 누를 때 동작
         holder.write_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ConstraintLayout keyboard = (ConstraintLayout)holder.itemView.getRootView().findViewById(R.id.layout_keyboard);
                 keyboard.setVisibility(View.VISIBLE);
 
-                EditText content = (EditText)holder.itemView.getRootView().findViewById(R.id.edit_keyboard);
+                final EditText content = (EditText)holder.itemView.getRootView().findViewById(R.id.edit_keyboard);
                 content.requestFocus();
                 Button send = (Button)holder.itemView.getRootView().findViewById(R.id.button_key_send);
 
+
+                final IBinder token = holder.itemView.getWindowToken();
                 final InputMethodManager imm = (InputMethodManager)mInflater.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(content, InputMethodManager.SHOW_FORCED);
                 //글쓰기 누를 때
                 send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText content = (EditText)holder.itemView.getRootView().findViewById(R.id.edit_keyboard);
                         if(content.getText().toString().trim().length() == 0) {
                             content.requestFocus();
                             return;
                         }
                         TravelRoom.writeContent(title, content.getText().toString());
                         content.setText("");
-                        imm.hideSoftInputFromWindow(holder.itemView.getWindowToken(), 0); //키보드 접기
+                        imm.hideSoftInputFromWindow(token, 0); //키보드 접기
                     }
                 });
             }
@@ -108,7 +128,7 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
                                 Timestamp time = doc.getTimestamp("time");
                                 String writer = doc.getString("writer");
 
-                                Content newContent = new Content(doc.getId(), comment, time, writer);
+                                Content newContent = new Content(doc.getId(), comment, time, writer, title);
                                 contents.add(newContent);
                             }
                         }
@@ -129,6 +149,7 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
         TextView myTextView;
         Button write_btn;
         RecyclerView recyclerView_content;
+        ConstraintLayout mainLayout;
         ConstraintLayout keyboard;
 
         ViewHolder(View itemView) {
@@ -136,6 +157,8 @@ public class RecyclerCheckAdapter extends RecyclerView.Adapter<RecyclerCheckAdap
             myTextView = itemView.findViewById(R.id.textView_checkList_title);
             recyclerView_content = itemView.findViewById(R.id.recycler_checklist_content);
             write_btn = itemView.findViewById(R.id.button_content_write);
+            mainLayout = itemView.findViewById(R.id.mainLayout);
+
             itemView.setOnClickListener(this);
         }
 

@@ -47,29 +47,6 @@ public class BFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_b, container, false);
 
-        Button btn = (Button)view.findViewById(R.id.button3);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TravelRoom.createNewRoom(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if(task.isSuccessful()){
-                            TravelRoom.entryRoom(task.getResult().getId());
-                            //getActivity().finish();
-                        }
-                    }
-                });
-            }
-        });
-        Button logout = (Button)view.findViewById(R.id.button4);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User.logoutUser();
-            }
-        });
-
         Button newContent= (Button)view.findViewById(R.id.button_newContent);
         newContent.setOnClickListener(new View.OnClickListener() {
             @Override

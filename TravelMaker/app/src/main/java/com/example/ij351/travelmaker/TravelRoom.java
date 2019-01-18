@@ -76,12 +76,23 @@ public class TravelRoom {
         db.collection("Travels").document(roomId).collection("CheckLists").document(title)
                 .set(data);
     }
+    public static void deleteCheckList(String title, String documentId)
+    {
+        db.collection("Travels").document(roomId).collection("CheckLists").document(title)
+                .collection("contents").document(documentId).delete();
+    }
+
+
 
     // 글 작성
     public static void writeContent(String title, String comment) {
-        Content data = new Content(comment);
+        Content data = new Content(comment, title);
         db.collection("Travels").document(roomId).collection("CheckLists").document(title).collection("contents")
                 .add(data.getHashMap());
+    }
+    public static void deleteContent(String title)
+    {
+        db.collection("Travels").document(roomId).collection("CheckLists").document(title).delete();
     }
 
     //글작성
@@ -89,6 +100,10 @@ public class TravelRoom {
         Cost data = new Cost(cost, Timestamp.now(), content);
         db.collection("Travels").document(roomId).collection("Costs")
                 .add(data.getHashMap());
+    }
+    public static void deleteCost(String documentId)
+    {
+        db.collection("Travels").document(roomId).collection("Costs").document(documentId).delete();
     }
 }
 
