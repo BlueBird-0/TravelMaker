@@ -1,8 +1,11 @@
 package com.example.ij351.travelmaker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +34,20 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         User user = mData.get(position);
         holder.contentComment.setText(user.name);
+        holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mData.get(position).uid.equals(User.getFirebaseUser().getUid()))
+                {
+                    Intent intent = new Intent(mInflater.getContext(), ParticipantActivity.class);
+                    mInflater.getContext().startActivity(intent);
+                }
+            }
+        });
+
         if(user.hasPassport == false)
         {
             holder.contentState.setBackgroundResource(R.drawable.ic_passport);
@@ -57,11 +71,13 @@ public class RecyclerPartAdapter extends RecyclerView.Adapter<RecyclerPartAdapte
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView contentComment;
         Button contentState;
+        ConstraintLayout constraintLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
             contentComment = itemView.findViewById(R.id.textView_contentComment);
             contentState = itemView.findViewById(R.id.button_contentState);
+            constraintLayout = itemView.findViewById(R.id.constraint_participants);
             itemView.setOnClickListener(this);
         }
 

@@ -31,8 +31,6 @@ public class CreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);    //액티비티에 사용되는 xml 불러오기
 
-
-
         //xml에서 버튼 찾아오기
         final Button btn_create = (Button)findViewById(R.id.btn_createUser);
         //버튼 기능 구현 (리스너 이용)

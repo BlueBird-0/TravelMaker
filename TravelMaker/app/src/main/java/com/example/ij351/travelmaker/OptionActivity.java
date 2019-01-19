@@ -3,6 +3,7 @@ package com.example.ij351.travelmaker;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,6 +33,29 @@ public class OptionActivity extends AppCompatActivity{
                 showSnackbar(findViewById(R.id.layout_option), "Copy Clipboard");
             }
         });
+
+        Button roomExit = (Button)findViewById(R.id.button_roomExit);
+        roomExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TravelRoom.roomId = null;
+                Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+
+        Button logout = (Button)findViewById(R.id.button_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User.logoutUser();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+
     }
 
     public static void showSnackbar(View view, String message)

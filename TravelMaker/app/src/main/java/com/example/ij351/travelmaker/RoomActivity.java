@@ -22,6 +22,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class RoomActivity extends AppCompatActivity {
 
     @Override
+    public void onBackPressed() {
+        //        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);    //액티비티에 사용되는 xml 불러오기
@@ -31,6 +36,7 @@ public class RoomActivity extends AppCompatActivity {
         final Button create_room = (Button)findViewById(R.id.button_createRoom);
         final Button entry_room = (Button)findViewById(R.id.button_entryRoom);
         final EditText entryCode = (EditText)findViewById(R.id.editText_entryRoom);
+        final Button logout = (Button)findViewById(R.id.button_logout);
 
         create_room.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +45,7 @@ public class RoomActivity extends AppCompatActivity {
                 create_room.setEnabled(false);
                 entry_room.setEnabled(false);
                 entryCode.setEnabled(false);
+                logout.setEnabled(false);
                 progressBar.setVisibility(View.VISIBLE);
 
                 TravelRoom.createNewRoom(new OnCompleteListener<DocumentReference>() {
@@ -58,6 +65,7 @@ public class RoomActivity extends AppCompatActivity {
                                     create_room.setEnabled(true);
                                     entry_room.setEnabled(true);
                                     entryCode.setEnabled(true);
+                                    logout.setEnabled(true);
                                     progressBar.setVisibility(View.INVISIBLE);
                                     showSnackbar(findViewById(R.id.layout_room), task.getException().getMessage());
                                 }
@@ -82,6 +90,7 @@ public class RoomActivity extends AppCompatActivity {
                 create_room.setEnabled(false);
                 entry_room.setEnabled(false);
                 entryCode.setEnabled(false);
+                logout.setEnabled(false);
                 progressBar.setVisibility(View.VISIBLE);
 
                 TravelRoom.entryRoom(entryCode.getText().toString(), new OnCompleteListener<DocumentSnapshot>() {
@@ -99,12 +108,22 @@ public class RoomActivity extends AppCompatActivity {
                                 create_room.setEnabled(true);
                                 entry_room.setEnabled(true);
                                 entryCode.setEnabled(true);
+                                logout.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 showSnackbar(findViewById(R.id.layout_room), "Room does not exist!");
                             }
                         }
                     }
                 });
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User.logoutUser();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                getApplicationContext().startActivity(intent);
             }
         });
     }

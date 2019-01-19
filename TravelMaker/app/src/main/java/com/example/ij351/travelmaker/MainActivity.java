@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
@@ -39,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_pen,
             R.drawable.ic_pen
     };
+
+    @Override
+    public void onBackPressed() {
+    //        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

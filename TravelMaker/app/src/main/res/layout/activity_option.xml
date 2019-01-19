@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="270dp"
+    android:layout_height="wrap_content"
+    android:background="#22008800">
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Option"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout4"
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/layout_option"
@@ -12,50 +33,36 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout5">
+        app:layout_constraintStart_toStartOf="parent">
 
     </android.support.design.widget.CoordinatorLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="136dp"
-        android:text="로그아웃 만들어야함"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_roomId" />
-
-    <FrameLayout
-        android:id="@+id/frameLayout5"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </FrameLayout>
+        android:layout_marginStart="8dp"
+        android:text="로그아웃"
+        app:layout_constraintBottom_toBottomOf="@+id/button_roomExit"
+        app:layout_constraintStart_toEndOf="@+id/button_roomExit" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="32dp"
         android:text="여행 방 코드"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout4" />
 
     <TextView
         android:id="@+id/textView_roomId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="4dp"
         android:text="여행방 코드가 없습니다."
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -66,27 +73,19 @@
         android:layout_height="32dp"
         android:layout_marginStart="12dp"
         android:background="@drawable/ic_copy"
-        android:text="복사 버튼"
         app:layout_constraintBottom_toBottomOf="@+id/textView_roomId"
         app:layout_constraintStart_toEndOf="@+id/textView_roomId"
         app:layout_constraintTop_toTopOf="@+id/textView_roomId" />
 
     <Button
-        android:id="@+id/button11"
+        android:id="@+id/button_roomExit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="34dp"
-        android:text="방만들기"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="방나가기"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_roomId" />
-
-    <Button
-        android:id="@+id/button12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="방나가기"
-        app:layout_constraintStart_toEndOf="@+id/button11"
-        app:layout_constraintTop_toTopOf="@+id/button11" />
 </android.support.constraint.ConstraintLayout>

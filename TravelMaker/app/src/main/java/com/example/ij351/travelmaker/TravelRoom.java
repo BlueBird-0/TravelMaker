@@ -23,6 +23,7 @@ import java.util.Map;
 public class TravelRoom {
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
     public static String roomId;
+    public static int numPeopleInRoom = 1;
     private static String TAG = "LoginActivity";
 
     TravelRoom()
@@ -68,6 +69,16 @@ public class TravelRoom {
                         if(documentSnapshot.getData() != null) {
                             roomId = id;
                             Log.d(TAG, "방 입장 : " + roomId);
+
+
+                            //Participants 생성
+                            User me = new User();
+                            me.uid = User.getFirebaseUser().getUid();
+                            me.name = User.getFirebaseUser().getDisplayName();
+                            me.email = User.getFirebaseUser().getEmail();
+                            db.collection("Travels").document(id).collection("Participants")
+                                    .document(me.uid)
+                                    .set(me.getHashMap());
                         }
                         else{
                         }

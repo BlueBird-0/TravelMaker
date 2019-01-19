@@ -16,6 +16,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <FrameLayout
+                android:id="@+id/frameLayout7"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginStart="8dp"
@@ -51,6 +52,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
+            <Button
+                android:id="@+id/button_checkList"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/ic_check"
+                app:layout_constraintBottom_toTopOf="@+id/frameLayout7"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_participant"
                 android:layout_width="match_parent"
@@ -58,6 +69,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="10dp"
+                android:minHeight="50dp"
                 android:scrollbars="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

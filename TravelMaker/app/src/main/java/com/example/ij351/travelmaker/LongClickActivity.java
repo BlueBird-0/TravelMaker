@@ -6,10 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 public class LongClickActivity extends AppCompatActivity {
     public static int STATE_DEL_CHECKLIST = 0;
     public static int STATE_DEL_CONTENT = 1;
     public static int STATE_DEL_COST = 2;
+    public static int STATE_DEL_BILL = 3;
     private String TAG = "LoginActivityLog";
 
     @Override
@@ -45,6 +49,17 @@ public class LongClickActivity extends AppCompatActivity {
                 if(extras.getInt("state") == STATE_DEL_COST)
                 {
                     TravelRoom.deleteCost(extras.getString("documentId"));
+                    finish();
+                }
+                if(extras.getInt("state") == STATE_DEL_BILL)
+                {
+                    TravelRoom.db.collection("Travels").document(TravelRoom.roomId).collection("Bills").document(
+                            extras.getString("documentId")).delete();
+                    //firestore 삭제
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference desertRef = storageRef.child("images/"+TravelRoom.roomId+extras.getString("storageFileName"));
+                    desertRef.delete();
                     finish();
                 }
             }

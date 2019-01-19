@@ -21,9 +21,10 @@
         </activity>
         <activity android:name=".RoomActivity"/>
         <activity android:name=".CreateActivity"/>
-        <activity android:name=".OptionActivity"/>
+        <activity android:name=".OptionActivity" android:theme="@style/AppTheme.Dialog"/>
         <activity android:name=".NewContentActivity" android:theme="@style/AppTheme.Dialog"/>
         <activity android:name=".LongClickActivity" android:theme="@style/AppTheme.Dialog"/>
+        <activity android:name=".ParticipantActivity" android:theme="@style/AppTheme.Dialog"/>
     </application>
 
 </manifest>

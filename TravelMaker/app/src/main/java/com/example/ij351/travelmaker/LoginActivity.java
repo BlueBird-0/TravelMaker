@@ -88,7 +88,8 @@ public class LoginActivity extends AppCompatActivity {
                         btn_create.setEnabled(true);
 
                         if(task.isSuccessful()){
-                            finish();
+                            Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
+                            startActivity(intent);
                         }
                         else {
                             Log.d(TAG, task.getException().toString());

@@ -1,6 +1,8 @@
 package com.example.ij351.travelmaker;
 
+import android.Manifest;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,8 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,9 +36,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import gun0912.tedbottompicker.TedBottomPicker;
 
 public class CFragment extends Fragment {
     RecyclerBillAdapter adapter;
@@ -54,55 +70,69 @@ public class CFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_c, container, false);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Travels").document(TravelRoom.roomId).collection("Costs")
-                .orderBy("time")    //내림차순검색
-                .addSnapshotListener(new EventListener<QuerySnapshot>(){
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot value, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-
-                        List<String> cities = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : value) {
-                            Log.w(TAG, "Listen event.", e);
-                            if (doc.get("q") != null) {
-                                cities.add(doc.getString("q"));
-                            }
-                        }
-                        Log.d(TAG, "Current cites in CA: " + cities);
-                    }
-                });
-
-
 
         //영수증들 가져오기
         //리스트 출력
-        final ArrayList<String> Participants = new ArrayList<>();
+        final ArrayList<Bill> bills = new ArrayList<>();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_bills);
         final ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.progressBar_main);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-  //    adapter = new RecyclerBillAdapter(getContext(), Participants);
+      adapter = new RecyclerBillAdapter(getContext(), bills);
         //adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
         //TravelRoom.db.collection("Travels").document(TravelRoom.roomId)
         TravelRoom.db.collection("Travels").document(TravelRoom.roomId)
-                .collection("Participants").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .collection("Bills")
+                .orderBy("time")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Participants.add(documentSnapshot.getString("name"));
-                            }
-//                            adapter.notifyDataSetChanged();     //Adapter 새로고침
-                            progressBar.setVisibility(View.INVISIBLE);
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot value, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed1.", e);
+                            return;
                         }
+
+                        bills.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            Bill newBill = new Bill(doc.getId(), doc.getString("uri"), doc.getTimestamp("time"));
+                            bills.add(newBill);
+                        }
+                        adapter.notifyDataSetChanged();     //Adapter 새로고침
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
+        //영수증 사진 업로드
+        Button picture = (Button)view.findViewById(R.id.button_bill_write);
+        picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionListener permissionlistener = new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(getContext())
+                                .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                                    @Override
+                                    public void onImageSelected(Uri uri) {
+                                        uploadImage(uri);
+                                    }
+                                })
+                                .create();
+                        tedBottomPicker.show(getFragmentManager());
+                    }
+                    @Override
+                    public void onPermissionDenied(List<String> deniedPermissions) {
+                        Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                };
+                TedPermission.with(getContext())
+                        .setPermissionListener(permissionlistener)
+                        .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .check();
+            }
+        });
+
 
 
 
@@ -186,11 +216,53 @@ public class CFragment extends Fragment {
                         }
                         total_text.setText("Total : "+String.valueOf(total)+"￦");
                         //개인당 금액
+                        TextView oneMen_text = (TextView)view.findViewById(R.id.textView_oneMen);
+                        oneMen_text.setText("One-Men : "+String.valueOf(total / TravelRoom.numPeopleInRoom) +"￦");
+
+
                         cost_adapter.notifyDataSetChanged();     //Adapter 새로고침
                         progressBar2.setVisibility(View.INVISIBLE);
                         Log.d(TAG, "Current cites in CA: " + costs);
                     }
                 });
         return view;
+    }
+
+    public void uploadImage(Uri file)
+    {
+        final Timestamp uploadTime = Timestamp.now();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        final StorageReference mountainImagesRef = storageRef.child("images/"+TravelRoom.roomId+"/bill_"+uploadTime.getSeconds());
+        UploadTask uploadTask = mountainImagesRef.putFile(file);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>(){
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    Log.d(TAG, "사진 업로드 실패");
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return mountainImagesRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    Log.d(TAG, "사진 업로드 성공");
+                    Log.d(TAG, downloadUri.toString());
+
+                    Bill newBill = new Bill("", downloadUri.toString(), uploadTime);
+                    TravelRoom.db.collection("Travels").document(TravelRoom.roomId).collection("Bills")
+                            .add(newBill.getHashMap());
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
     }
 }

@@ -47,6 +47,15 @@ public class BFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_b, container, false);
+        Button button_checkList = (Button)view.findViewById(R.id.button_checkList);
+        button_checkList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ParticipantActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button newContent= (Button)view.findViewById(R.id.button_newContent);
         newContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +65,6 @@ public class BFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
 
 
         //방에 있는 사람들 데이터 가져오기
@@ -81,8 +89,10 @@ public class BFragment extends Fragment {
                             return;
                         }
 
+                        int numPeopleInRoom = 0;
                         participants.clear();
                         for (QueryDocumentSnapshot doc : value) {
+                            numPeopleInRoom++;
                             if (doc.getString("name") != null || doc.getBoolean("hasPassport") != null || doc.getBoolean("hasVISA") != null
                                     || doc.getString("uid") != null || doc.getString("email") != null) {
                                 String uid = doc.getString("uid");
@@ -97,6 +107,7 @@ public class BFragment extends Fragment {
                         }
                         adapter.notifyDataSetChanged();     //Adapter 새로고침
                         progressBar.setVisibility(View.INVISIBLE);
+                        TravelRoom.numPeopleInRoom = numPeopleInRoom;   //사람 수 새로고침
                     }
                 });
 
@@ -146,21 +157,6 @@ public class BFragment extends Fragment {
                         progressBar2.setVisibility(View.INVISIBLE);
                     }
                 });
-        /*
-        TravelRoom.db.collection("Travels").document(TravelRoom.roomId)
-                .collection("CheckLists").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                titles.add(documentSnapshot.getId());
-                            }
-                            adapter_check.notifyDataSetChanged();     //Adapter 새로고침
-                            progressBar2.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                });*/
 
         return view;
     }

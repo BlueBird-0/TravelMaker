@@ -11,6 +11,7 @@ import com.androidadvance.topsnackbar.TSnackbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -78,6 +79,12 @@ public class User {
     //로그인
     public static void loginUser(String email, String password, OnCompleteListener<AuthResult> listener) {
         mAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        user = mAuth.getCurrentUser();
+                    }
+                })
             .addOnCompleteListener(listener);
     }
 
@@ -91,7 +98,6 @@ public class User {
             return false;
         }
     }
-
 
     //회원가입
     public static void createUser(final String email, final String name, String password, OnCompleteListener<AuthResult> listener) {
