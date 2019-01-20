@@ -1,6 +1,8 @@
 package com.example.ij351.travelmaker;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,15 +16,23 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 //여행 방 관리 클래스
 //FireStore  이용
 public class TravelRoom {
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
     public static String roomId;
+    public static String ROOMID_SP = "ROOMID";
+    /* 사용법 */
+    //Prefs.putString(TravelRoom.ROOMID_SP, TravelRoom.roomId);
+    //
+
     public static int numPeopleInRoom = 1;
     private static String TAG = "LoginActivity";
 
@@ -30,7 +40,6 @@ public class TravelRoom {
     {
         db = FirebaseFirestore.getInstance();
     }
-
 
     // 새로운 여행 방 생성
     public static void createNewRoom(OnCompleteListener<DocumentReference> listener) {

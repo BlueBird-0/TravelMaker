@@ -1,6 +1,7 @@
 package com.example.ij351.travelmaker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.pixplicity.easyprefs.library.Prefs;
 
 public class RoomActivity extends AppCompatActivity {
 
@@ -30,6 +32,16 @@ public class RoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);    //액티비티에 사용되는 xml 불러오기
+
+        //저장된 값 있는지 확인
+        String roomId = Prefs.getString(TravelRoom.ROOMID_SP, TravelRoom.roomId);
+        if(roomId != null)
+        {
+            TravelRoom.roomId = roomId;
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
 
         final ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar_main);
 
@@ -56,6 +68,8 @@ public class RoomActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task task) {
                                 if(task.isSuccessful())
                                 {
+                                    Prefs.putString(TravelRoom.ROOMID_SP, TravelRoom.roomId);
+
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(intent);
                                 }
@@ -100,6 +114,7 @@ public class RoomActivity extends AppCompatActivity {
                             DocumentSnapshot doc = task.getResult();
                             if(doc.exists())
                             {
+                                Prefs.putString(TravelRoom.ROOMID_SP, TravelRoom.roomId);
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             }else

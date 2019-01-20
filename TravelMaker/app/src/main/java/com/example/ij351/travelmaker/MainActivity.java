@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Intent intent = new Intent(this, OptionActivity.class);
             startActivity(intent);
-            Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
             return true;
         }
         return super.onOptionsItemSelected(item);

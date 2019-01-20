@@ -1,5 +1,6 @@
 package com.example.ij351.travelmaker;
 
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +46,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);    //액티비티에 사용되는 xml 불러오기
+
+        //데이터 저장 불러오기 Prefence
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
 
         //xml에서 버튼 찾아오기
         final Button btn_login = (Button)findViewById(R.id.btn_login);

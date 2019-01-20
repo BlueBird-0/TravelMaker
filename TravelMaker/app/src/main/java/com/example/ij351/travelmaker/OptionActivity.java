@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.pixplicity.easyprefs.library.Prefs;
 
 public class OptionActivity extends AppCompatActivity{
     @Override
@@ -39,6 +40,8 @@ public class OptionActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 TravelRoom.roomId = null;
+                Prefs.putString(TravelRoom.ROOMID_SP, null);
+
                 Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
                 getApplicationContext().startActivity(intent);
             }
@@ -50,6 +53,8 @@ public class OptionActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 User.logoutUser();
+                Prefs.putString(TravelRoom.ROOMID_SP, null);
+
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 getApplicationContext().startActivity(intent);
             }
